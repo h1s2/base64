@@ -1,0 +1,43 @@
+#base{
+    width: 120px;
+    height: 50px;
+    background-color: rgb(237, 248, 137);
+    padding: 5px;
+    margin: 10px;
+    margin-left: 0px;
+    
+    border-radius: 5px; /*모서리*/
+    text-align: center;
+    
+    margin-top: 10pt;
+    margin-bottom: 10pt;
+}
+
+#admod{
+    float: right
+}
+
+#input{
+    margin-top: 10pt;
+    width: 500pt;
+    height: 100pt;
+}
+
+#output{
+    width: 500pt;
+    height: 100pt;
+}
+
+#encode{
+    width: 100pt;
+    height: 50pt;
+    margin-top: 10pt;
+    margin-bottom: 10pt;
+}
+
+#decode{
+    width: 100pt;
+    height: 50pt;
+    margin-top: 10pt;
+    margin-bottom: 10pt;
+}
