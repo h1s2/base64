@@ -1,68 +1,65 @@
-function encode() {
-    var a = document.getElementById("input").value
-    var b = document.getElementById("output")
-    var count = 0
-    var twe = ""
-    var total = ""
+const output = document.getElementById('output');
+const encode = document.getElementById('encode');
+const decode = document.getElementById('decode');
+const base64Table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
-
-    //twe로 2진수 변환
-    while(1) {
-        if(a == "") break
-
-        twe += a.charCodeAt(0).toString(2).padStart(8, '0')
-        a = a.substr(1)
-        count++
-        
-        if(count == 3) count = 0
-    }
-
-    //total로 base64 변환
-    while(1) {
-        if(twe == "") break
-
-        total += en(parseInt(twe.substring(0, 6).padEnd(6, '0'), 2))
-        twe = twe.substring(6)
-    }
-
-    if(count == 2) total += "="
-    else if(count == 1) total += "=="
-
-    
-    b.value = total
+// index를 base64 문자로 변환하는 함수
+function en(index) {
+    return base64Table[index]
 }
 
-function decode() {
-    var a = document.getElementById("input").value
-    var b = document.getElementById("output")
-    var twe = ""
-    var total = ""
+// base64 문자를 index로 변환하는 함수
+function de(decodedChar) {
+    return base64Table.indexOf(decodedChar)
+}
 
+encode.addEventListener('click', () => {
 
-    a = a.replace(/=/g, '')
+    let input = document.getElementById("input").value;
+    let count = input.length % 3;
+    let binary = '';
+    output.value = '';
 
-    while(1) {
-        if(a == "") break
-        twe += de(a.substring(0, 1)).toString(2).padStart(6, '0')
-        a = a.substring(1)
+    // input을 binary에 2진수 변환
+    for(const char of input) {
+        const ascii = char.charCodeAt(0);
+        const bit8 = ascii.toString(2).padStart(8, '0');
+        binary += bit8;
     }
 
-    while(1) {
-        if(twe.indexOf('1') == -1) break
-        total += String.fromCharCode(parseInt(twe.substring(0, 8), 2))
-        twe = twe.substring(8)
+    // binary를 base64 변환
+    for(let i = 0; i < binary.length; i += 6) {
+        const bit6 = binary.substring(i, i + 6).padEnd(6, '0');
+        const index = parseInt(bit6, 2);
+        output.value += en(index);
     }
 
-    b.value = total
-}
+    if(count === 2) {
+        output.value += '=';
+    } else if(count === 1) {
+        output.value += '==';
+    }
+})
 
-function en(tt) {
-    var code = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+decode.addEventListener('click', () => {
 
-    return code.substring(tt, tt + 1)
-}
+    let input = document.getElementById('input').value;
+    let binary = '';
+    output.value = '';
 
-function de(tt) {
-    var code = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-    return code.indexOf(tt)
-}
+    input = input.replace(/=/g, '');
+
+    for(const char of input) {
+        const index = de(char);
+        const bit6 = index.toString(2).padStart(6, '0');
+        binary += bit6;
+    }
+
+    // 비트가 8개 이상일 때만 처리
+    for(let i = 0; i + 8 < binary.length; i += 8) {
+        const bit8 = binary.substring(i, i + 8);
+        const asciiCode = parseInt(bit8, 2);
+        const char = String.fromCharCode(asciiCode);
+        output.value += char;
+    }
+})
